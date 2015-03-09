@@ -3,5 +3,4 @@ A small node express module which reads BLE beacons in vicinity, and outputs the
 usage :
 
     npm install
-    bower install
     node app.js
