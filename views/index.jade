@@ -1,0 +1,24 @@
+doctype html
+html(lang="en")
+  head
+    title= pageTitle
+    script(src='http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js')
+    != js('app')
+    != js('jquery')
+    != js('semantic')
+    != css('semantic')
+  body(ng-app="test")
+    h1 BLE beacons by rssi and proximity
+    #container
+      div(ng-controller="TestController")
+        table.ui.striped.table
+          thead
+            tr
+              th Minor
+              th RSSI
+              th proximity
+          tbody(ng-repeat="beacon in beacon_stack")
+            tr(class="{{beacon.table_class}}")
+              td(ng-bind="beacon.minor")
+              td(ng-bind="beacon.rssi")
+              td(ng-bind="beacon.proximity")
