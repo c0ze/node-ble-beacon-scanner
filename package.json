@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "better-console": "^0.2.4",
-    "bleacon": "^0.2.1",
+    "bleacon": "c0ze/node-bleacon.git",
     "coffee-script": "^1.9.1",
     "connect-assets": "^4.6.0",
     "del": "^1.1.1",
