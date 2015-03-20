@@ -14,9 +14,9 @@ app.set 'view engine', 'jade'
 assets = require("connect-assets")
 paths = [
   "assets/js",
-  "assets/css",
-  "node_modules/jquery/dist",
-  "node_modules/semantic-ui/dist"
+  "assets/css"
+#  "node_modules/jquery/dist",
+#  "node_modules/semantic-ui/dist"
   ]
 
 app.use assets({paths: paths})
