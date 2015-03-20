@@ -1,0 +1,9 @@
+table {
+    width: inherit;
+}
+td {
+   text-align: center;
+}
+.inside {
+    background-color: pink;
+}

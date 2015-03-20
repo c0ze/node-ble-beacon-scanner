@@ -4,18 +4,20 @@ html(lang="en")
     title= pageTitle
     script(src='http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js')
     != js('app')
+    style
+      include style.css3
   body(ng-app="test")
     h1 BLE beacons by rssi and proximity
     #container
-      div(ng-controller="TestController")
-        table.ui.striped.table
+      div(ng-controller="TestController" style='width: 100%; height: 600px; margin: 0 0 20px 0; border: solid 1px #999; overflow-y: scroll;')
+        table
           thead
             tr
               th Minor
               th RSSI
               th proximity
-          tbody(ng-repeat="beacon in beacon_stack")
-            tr(class="{{beacon.table_class}}")
+          tbody
+            tr(ng-repeat="beacon in beacon_stack" ng-class="beacon.table_class")
               td(ng-bind="beacon.minor")
               td(ng-bind="beacon.rssi")
               td(ng-bind="beacon.proximity")
