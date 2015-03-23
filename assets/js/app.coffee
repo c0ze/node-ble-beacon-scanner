@@ -11,5 +11,8 @@
               beacon.table_class = "outside"
           $timeout tick, 1000
         )
+        $http.get('/counter').then( (data) ->
+	  $scope.counter = data.data
+	)
       tick()
     )
