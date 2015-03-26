@@ -12,7 +12,7 @@
           $timeout tick, 1000
         )
         $http.get('/counter').then( (data) ->
-	  $scope.counter = data.data
-	)
+          $scope.counter = data.data
+        )
       tick()
     )
