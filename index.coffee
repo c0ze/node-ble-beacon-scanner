@@ -8,6 +8,8 @@ counter = 0
 beacon_1_proximity = 0
 proximity_threshold = -65.0
 spike_threshold = 20
+last_update = Date.now()
+update_interval = 3000 # 3 seconds
 MAX_STACK_SIZE = 10
 
 app = express()
@@ -49,8 +51,10 @@ Bleacon.on 'discover', (bleacon) ->
       aggregate = 0.5*(bleacon.rssi + beacon_1_proximity)
       if Math.abs(aggregate - beacon_1_proximity) < spike_threshold
         beacon_1_proximity = aggregate
-  if beacon_1_proximity > proximity_threshold
-    counter += 1
+  if beacon_1_proximity != 0 and beacon_1_proximity > proximity_threshold
+    if (Date.now() - last_update) > update_interval
+      last_update = Date.now()
+      counter += 1
   stack.push(bleacon)
   if (stack.length > MAX_STACK_SIZE)
     stack.shift()
