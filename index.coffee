@@ -6,7 +6,7 @@ Bleacon = require('bleacon')
 stack = []
 counter = 0
 beacon_1_proximity = 0
-proximity_threshold = -65
+proximity_threshold = -65.0
 spike_threshold = 20
 MAX_STACK_SIZE = 10
 
@@ -46,10 +46,10 @@ Bleacon.on 'discover', (bleacon) ->
     if beacon_1_proximity == 0
       beacon_1_proximity = bleacon.rssi
     else
-      aggregate = 0.5*(bleacon.rssi + bleacon_1_proximity)
+      aggregate = 0.5*(bleacon.rssi + beacon_1_proximity)
       if Math.abs(aggregate - beacon_1_proximity) < spike_threshold
-        bleacon_1_proximity = aggregate
-  if bleacon_1_proximity < proximity_threshold
+        beacon_1_proximity = aggregate
+  if beacon_1_proximity > proximity_threshold
     counter += 1
   stack.push(bleacon)
   if (stack.length > MAX_STACK_SIZE)
