@@ -33,3 +33,14 @@
     - name: Install npm dependencies
       sudo: false
       npm: path={{ ble_scanner_dir }} state=present
+    - name: "Install forever (to run Node.js app)."
+      npm: name=forever global=yes state=latest
+
+    - name: "Check list of Node.js apps running."
+      command: forever list
+      register: forever_list
+      changed_when: false
+
+    - name: "Start ble beacon scan Node.js app."
+      command: forever start "{{ ble_scanner_dir }}/app.js"
+      when: "forever_list.stdout.find('{{ ble_scanner_dir }}/app.js') == -1"
