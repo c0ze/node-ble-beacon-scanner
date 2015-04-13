@@ -3,14 +3,8 @@ express = require('express')
 path = require('path')
 Bleacon = require('bleacon')
 
-stack = []
-counter = 0
-beacon_1_proximity = 0
-proximity_threshold = -65.0
-spike_threshold = 20
-last_update = Date.now()
-update_interval = 3000 # 3 seconds
-MAX_STACK_SIZE = 10
+BleScan = require("./ble_scan").BLE
+BLE = new BleScan()
 
 app = express()
 app.set 'port', process.env.PORT || 3000
@@ -32,11 +26,11 @@ app.get '/', (req, res) ->
   res.render('index')
 
 app.get '/stack', (req, res) ->
-  res.write(JSON.stringify(stack));
+  res.write(JSON.stringify(BLE.stack));
   res.end()
 
 app.get '/counter', (req, res) ->
-  res.write(JSON.stringify(counter));
+  res.write(JSON.stringify(BLE.counter));
   res.end()
 
 http.createServer(app).listen app.get('port'), () ->
@@ -44,19 +38,6 @@ http.createServer(app).listen app.get('port'), () ->
 
 Bleacon.on 'discover', (bleacon) ->
   console.log JSON.stringify(bleacon)
-  if bleacon.minor == 1
-    if beacon_1_proximity == 0
-      beacon_1_proximity = bleacon.rssi
-    else
-      aggregate = 0.5*(bleacon.rssi + beacon_1_proximity)
-      if Math.abs(aggregate - beacon_1_proximity) < spike_threshold
-        beacon_1_proximity = aggregate
-  if beacon_1_proximity != 0 and beacon_1_proximity > proximity_threshold
-    if (Date.now() - last_update) > update_interval
-      last_update = Date.now()
-      counter += 1
-  stack.push(bleacon)
-  if (stack.length > MAX_STACK_SIZE)
-    stack.shift()
+  BLE.scan bleacon
 
 Bleacon.startScanning()
