@@ -1,5 +1,5 @@
 ---
-- hosts: raspberry-pi
+- hosts: rpi-ble-scan
   sudo: false
   vars:
     deb_dir: "/home/pi/debs"
@@ -9,10 +9,17 @@
     node_js_deb_file: "node_latest_armhf.deb"
     ble_scanner_repo: "https://github.com/c0ze/node-ble-beacon-scanner"
     ble_scanner_dir: "/home/pi/ble-scanner"
+    log_dir: "/var/log/ble-scanner"
+    log_file: "{{ log_dir}}/ble_scan.log"
+    out_file: "{{ log_dir}}/ble_scan.out"
+    error_file: "{{ log_dir}}/ble_scan.err"
   tasks:
     - name: Make download dir
       sudo: false
       file: path={{ deb_dir }} state=directory
+    - name: Make log dir
+      sudo: true
+      file: path={{ log_dir }} state=directory
     - name: Download Node Js
       sudo: false
       get_url: url={{ node_js_url }} dest={{ deb_dir }}
@@ -35,12 +42,12 @@
       npm: path={{ ble_scanner_dir }} state=present
     - name: "Install forever (to run Node.js app)."
       npm: name=forever global=yes state=latest
-
+      sudo: true
     - name: "Check list of Node.js apps running."
       command: forever list
       register: forever_list
       changed_when: false
-
     - name: "Start ble beacon scan Node.js app."
-      command: forever start "{{ ble_scanner_dir }}/app.js"
+      sudo: true
+      action: shell cd {{ ble_scanner_dir }} && forever start -l {{ log_file }} -o {{ out_file }} -e {{ error_file }} app.js
       when: "forever_list.stdout.find('{{ ble_scanner_dir }}/app.js') == -1"
