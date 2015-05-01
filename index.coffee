@@ -39,6 +39,40 @@ app.get '/counter', (req, res) ->
 http.createServer(app).listen app.get('port'), () ->
   console.log('Express server listening on port ' + app.get('port'))
 
+Estimote.discover( (estimote) ->
+  async.series([
+    (callback) ->
+      estimote.on('disconnect', () ->
+        console.log('disconnected!')
+        Bleacon.startScanning()
+        return
+      )
+      estimote.connect(callback)
+    ,
+    (callback) ->
+      estimote.discoverServicesAndCharacteristics(callback)
+    ,
+    (callback) ->
+      estimote.readMajor (major) ->
+        console.log "Major : " + major
+        callback()
+    ,
+    (callback) ->
+      estimote.readBatteryLevel (batteryLevel) ->
+        console.log "Battery Level : " + batteryLevel
+        callback()
+    ,
+    (callback) ->
+      estimote.readPowerLevel (powerLevel, dBm) ->
+        console.log "Power Level : " + powerLevel
+        console.log "dBm : " + dBm
+        callback()
+    ,
+    (callback) ->
+      estimote.disconnect(callback)
+    ])
+)
+
 Bleacon.on 'discover', (bleacon) ->
   console.log JSON.stringify(bleacon)
   BLE.scan bleacon

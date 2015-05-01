@@ -1,3 +1,6 @@
+Bleacon = require('bleacon').Bleacon
+Estimote = require('bleacon').Estimote
+
 class BleScan
 
   # Constants
@@ -7,25 +10,36 @@ class BleScan
   SPIKE_THRESHOLD = 20
 
   constructor: () ->
-    @stack = []
-    @counter = 0
-    @beaconProximity = 0
-    @lastUpdate = Date.now()
+    @beacons = {}
+
+  hashKey: (bleacon) =>
+    bleacon.uuid + bleacon.major + bleacon.minor
+
+  initialize: (bleacon) =>
+    @beacons[@hashKey(bleacon)] = {}
+    @beacons[@hashKey(bleacon)].stack = []
+    @beacons[@hashKey(bleacon)].counter = 0
+    @beacons[@hashKey(bleacon)].beaconProximity = 0
+    @beacons[@hashKey(bleacon)].batteryLevel = 0
+    @beacons[@hashKey(bleacon)].batteryLevelUpdate = Date.now()
+    @beacons[@hashKey(bleacon)].lastUpdate = Date.now()
 
   scan: (bleacon) =>
-    if bleacon.minor == 1
-      if @beaconProximity == 0
-        @beaconProximity = bleacon.rssi
-      else
-        aggregate = 0.5*(bleacon.rssi + @beaconProximity)
-        if Math.abs(aggregate - @beaconProximity) < SPIKE_THRESHOLD
-          @beaconProximity = aggregate
-    if @beaconProximity != 0 and @beaconProximity > PROXIMITY_THRESHOLD
-      if (Date.now() - @lastUpdate) > UPDATE_INTERVAL
-        @lastUpdate = Date.now()
-        @counter += 1
-    @stack.push(bleacon)
-    if (@stack.length > MAX_STACK_SIZE)
-      @stack.shift()
+    console.log @beacons
+    @initialize(bleacon) unless @beacons[@hashKey(bleacon)]
+    beaconHash = @beacons[@hashKey(bleacon)]
+    if beaconHash.beaconProximity == 0
+      beaconHash.beaconProximity = bleacon.rssi
+    else
+      aggregate = 0.5*(bleacon.rssi + beaconHash.beaconProximity)
+      if Math.abs(aggregate - beaconHash.beaconProximity) < SPIKE_THRESHOLD
+        beaconHash.beaconProximity = aggregate
+    if beaconHash.beaconProximity != 0 and beaconHash.beaconProximity > PROXIMITY_THRESHOLD
+      if (Date.now() - beaconHash.lastUpdate) > UPDATE_INTERVAL
+        beaconHash.lastUpdate = Date.now()
+        beaconHash.counter += 1
+    beaconHash.stack.push(bleacon)
+    if (beaconHash.stack.length > MAX_STACK_SIZE)
+      beaconHash.stack.shift()
 
 exports.BLE = BleScan
