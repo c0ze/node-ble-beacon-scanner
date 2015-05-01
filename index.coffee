@@ -1,7 +1,10 @@
 http = require('http')
 express = require('express')
 path = require('path')
-Bleacon = require('bleacon')
+Bleacon = require('bleacon').Bleacon
+Estimote = require('bleacon').Estimote
+
+async = require('async')
 
 BleScan = require("./ble_scan").BLE
 BLE = new BleScan()
