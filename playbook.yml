@@ -49,5 +49,5 @@
       changed_when: false
     - name: "Start ble beacon scan Node.js app."
       sudo: true
-      action: shell cd {{ ble_scanner_dir }} && forever start -l {{ log_file }} -o {{ out_file }} -e {{ error_file }} app.js
+      action: shell cd {{ ble_scanner_dir }} && forever start -a -l {{ log_file }} -o {{ out_file }} -e {{ error_file }} app.js
       when: "forever_list.stdout.find('{{ ble_scanner_dir }}/app.js') == -1"
