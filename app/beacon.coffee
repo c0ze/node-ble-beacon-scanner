@@ -2,9 +2,9 @@ zpad = require('zpad')
 
 class Beacon
   SPIKE_THRESHOLD = 20
-  UPDATE_INTERVAL = 3000 # 3 seconds
+  UPDATE_INTERVAL = 5000 # 5 seconds
   BATTERY_UPDATE_INTERVAL = 10000 # 10 seconds
-  PROXIMITY_THRESHOLD = -65.0
+  PROXIMITY_THRESHOLD = -75.0
   MAX_STACK_SIZE = 1
 
   constructor: (bleacon) ->
