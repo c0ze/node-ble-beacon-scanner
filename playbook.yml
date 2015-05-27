@@ -43,11 +43,18 @@
     - name: "Install forever (to run Node.js app)."
       npm: name=forever global=yes state=latest
       sudo: true
-    - name: "Check list of Node.js apps running."
-      command: forever list
-      register: forever_list
-      changed_when: false
+    - name: "Stop forever apps"
+      command: forever stopall
+      sudo: true
     - name: "Start ble beacon scan Node.js app."
       sudo: true
       action: shell cd {{ ble_scanner_dir }} && forever start -a -l {{ log_file }} -o {{ out_file }} -e {{ error_file }} app.js
-      when: "forever_list.stdout.find('{{ ble_scanner_dir }}/app.js') == -1"
+
+#    - name: "Check list of Node.js apps running."
+#      command: forever list
+#      register: forever_list
+#      changed_when: false
+#    - name: "Start ble beacon scan Node.js app."
+#      sudo: true
+#      action: shell cd {{ ble_scanner_dir }} && forever start -a -l {{ log_file }} -o {{ out_file }} -e {{ error_file }} app.js
+#      when: "forever_list.stdout.find('{{ ble_scanner_dir }}/app.js') == -1"
