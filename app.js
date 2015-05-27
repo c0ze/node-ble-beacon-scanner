@@ -1,2 +1,2 @@
 require('coffee-script/register')
-require('./index')
+require('./app/index')
