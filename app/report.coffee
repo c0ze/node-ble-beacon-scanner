@@ -10,6 +10,7 @@ class Report
 
   post: (beacons, callback) ->
     if @beaconData(beacons).length > 0
+      console.log @beaconData(beacons)
       request.post(
         HOST,
         { json: @transform(beacons) },
@@ -21,10 +22,15 @@ class Report
       )
 
   beaconData: (beacons) ->
-    (for id, beacon of beacons
-      { uuid: beacon.id(),
-      exits: beacon.counter,
-      battery: beacon.batteryLevel } if beacon.counter > 0 )
+    result = []
+    for id, beacon of beacons
+      if beacon.counter > 0
+        data =
+          uuid: beacon.id(),
+          exits: beacon.counter,
+          battery: beacon.batteryLevel
+        result.push data
+    result
 
   transform: (beacons) ->
     { mac: ID,

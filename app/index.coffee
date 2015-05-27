@@ -44,7 +44,6 @@ Bleacon.on 'discover', (bleacon) ->
 setInterval () ->
   console.log("I am doing my 1 minute check");
   Ble.report()
-  console.log Ble.beacons
 , the_interval
 
 Bleacon.startScanning()
