@@ -1,6 +1,4 @@
 Bleacon = require('bleacon')
-Estimote = Bleacon.Estimote
-async = require('async')
 Beacon = require('./beacon').Beacon
 Report = require('./report').Report
 
