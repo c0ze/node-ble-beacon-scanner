@@ -23,8 +23,9 @@ class Report
     beaconData = (for id, beacon of beacons
       { uuid: beacon.id(),
       exits: beacon.counter,
-      battery: beacon.batteryLevel })
+      battery: beacon.batteryLevel } if beacon.counter > 0 )
 
+    console.log beaconData
     { mac: ID,
     timestamp: (new Date()),
     beacons: beaconData }
