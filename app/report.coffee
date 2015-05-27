@@ -8,13 +8,15 @@ class Report
   constructor: () ->
     @config()
 
-  post: (beacons) ->
+  post: (beacons, callback) ->
     request.post(
       HOST,
       { json: @transform(beacons) },
       (error, response, body) ->
         if !error && response.statusCode == 200
-          console.log body
+          console.log "post complete."
+        else
+          callback(error, body)
     )
 
   transform: (beacons) ->

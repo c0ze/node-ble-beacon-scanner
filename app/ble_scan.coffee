@@ -20,7 +20,11 @@ class BleScan
 
   report: () =>
     console.log "reporting..."
-    @reporter.post(@beacons)
+    @reporter.post @beacons, (error, body) ->
+      console.log "reporting of beacons failed."
+      # do something with the beacons
+      console.log error
+      console.log body
     @beacons = {}
 
 exports.BLE = BleScan
