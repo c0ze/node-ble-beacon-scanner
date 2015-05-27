@@ -1,3 +1,5 @@
+zpad = require('zpad')
+
 class Beacon
   SPIKE_THRESHOLD = 20
   UPDATE_INTERVAL = 3000 # 3 seconds
@@ -15,6 +17,9 @@ class Beacon
     @major = bleacon.major
     @minor = bleacon.minor
     @uuid = bleacon.uuid
+
+  id: () ->
+    @uuid + zpad(@major, 5) + zpad(@minor, 5)
 
   readProximity: (bleacon) ->
     if @beaconProximity == 0

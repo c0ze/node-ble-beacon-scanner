@@ -21,11 +21,11 @@ class Report
 
   transform: (beacons) ->
     beaconData = (for id, beacon of beacons
-      { uuid: beacon.uuid,
+      { uuid: beacon.id(),
       exits: beacon.counter,
       battery: beacon.batteryLevel })
 
-    { id: ID,
+    { mac: ID,
     timestamp: (new Date()),
     beacons: beaconData }
 
