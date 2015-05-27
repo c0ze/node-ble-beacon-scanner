@@ -29,3 +29,5 @@ semantic.json
 
 # Users Environment Variables
 .lock-wscript
+
+config.json
