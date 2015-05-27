@@ -9,26 +9,27 @@ class Report
     @config()
 
   post: (beacons, callback) ->
-    request.post(
-      HOST,
-      { json: @transform(beacons) },
-      (error, response, body) ->
-        if !error && response.statusCode == 200
-          console.log "post complete."
-        else
-          callback(error, body)
-    )
+    if @beaconData(beacons).length > 0
+      request.post(
+        HOST,
+        { json: @transform(beacons) },
+        (error, response, body) ->
+          if !error && response.statusCode == 200
+            console.log "post complete."
+          else
+            callback(error, body)
+      )
 
-  transform: (beacons) ->
-    beaconData = (for id, beacon of beacons
+  beaconData: (beacons) ->
+    (for id, beacon of beacons
       { uuid: beacon.id(),
       exits: beacon.counter,
       battery: beacon.batteryLevel } if beacon.counter > 0 )
 
-    console.log beaconData
+  transform: (beacons) ->
     { mac: ID,
     timestamp: (new Date()),
-    beacons: beaconData }
+    beacons: @beaconData(beacons) }
 
   config: () ->
     fs.readFile './config.json', 'utf-8', (err, data) ->
